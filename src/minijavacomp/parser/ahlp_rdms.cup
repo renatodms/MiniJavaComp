@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.io.File;
-import compilador.Lexer;
-import compilador.ast.*;
+import minijavacomp.lexer.Lexer;
+import minijavacomp.ast.*;
 
 parser code {:
 	private Lexer lexer;
@@ -38,7 +38,7 @@ terminal STRGARG;
 
 non terminal Program prog;
 
-non terminal MainClassDecl mClass;
+non terminal MainClass mClass;
 non terminal ClassDeclList classList;
 non terminal ClassDecl clas; 
 non terminal Identifier ext;

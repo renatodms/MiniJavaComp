@@ -5,8 +5,8 @@
 
 import java.io.IOException;
 import java.io.File;
-import compilador.Lexer;
-import compilador.ast.*;
+import minijavacomp.lexer.Lexer;
+import minijavacomp.ast.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
@@ -447,7 +447,7 @@ class CUP$Parser$actions {
                 XMLElement RESULT;
 		Location mainxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
 		Location mainxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		MainClassDecl main = (MainClassDecl)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		MainClass main = (MainClass)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		Location cListxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location cListxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		ClassDeclList cList = (ClassDeclList)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
