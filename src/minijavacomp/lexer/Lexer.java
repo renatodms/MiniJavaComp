@@ -5,7 +5,7 @@
  * <a href="http://www.jflex.de/">JFlex</a> 1.6.1
  * from the specification file <tt>C:/Users/Cliente/Documents/UFPE/Compiladores/analisador/rdms.jflex</tt>
  */
-public class rdms {
+public class Lexer {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -244,7 +244,7 @@ public class rdms {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public rdms(java.io.Reader in) {
+  public Lexer(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -603,11 +603,11 @@ public class rdms {
         }
       }
       for (int i = firstFilePos; i < argv.length; i++) {
-        rdms scanner = null;
+        Lexer scanner = null;
         try {
           java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
           java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-          scanner = new rdms(reader);
+          scanner = new Lexer(reader);
           while ( !scanner.zzAtEOF ) scanner.yylex();
         }
         catch (java.io.FileNotFoundException e) {
