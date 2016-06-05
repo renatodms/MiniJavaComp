@@ -58,8 +58,18 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// ClassDeclList cl;
 	public void visit(Program n) {
 		n.m.accept(this);
+		
+		symbolTable.addClass(n.m.getId(), n.m.parent());
+		currClass = new Class(n.m.getId(), n.m.parent());
+		visit(n.m);
+		
 		for (int i = 0; i < n.cl.size(); i++) {
 			n.cl.elementAt(i).accept(this);
+			
+			symbolTable.addClass(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
+			currClass = new Class(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
+			visit(n.cl.elementAt(i));
+		
 		}
 	}
 
@@ -69,6 +79,10 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.i1.accept(this);
 		n.i2.accept(this);
 		n.s.accept(this);
+		
+		symbolTable.addClass(n.i1, null);
+		currClass = new Class(n.i1, null);
+		
 	}
 
 	// Identifier i;
@@ -78,9 +92,17 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.i.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
+			
+			currClass.addVar(n.i, n.vl.elementAt(i).t);
+			
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
 			n.ml.elementAt(i).accept(this);
+			
+			currClass.addMethod(n.ml.elementAt(i).i);
+			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
+			visit(n.ml.elementAt(i));
+			
 		}
 	}
 
@@ -93,9 +115,18 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.j.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
+			
+			currClass.addVar(n.i, n.vl.elementAt(i));
+			currClass.addVar(n.j, n.vl.elementAt(i));
+			
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
 			n.ml.elementAt(i).accept(this);
+			
+			currClass.addMethod(n.ml.elementAt(i).i);
+			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
+			visit(n.ml.elementAt(i));
+			
 		}
 	}
 
@@ -104,6 +135,9 @@ public class BuildSymbolTableVisitor implements Visitor {
 	public void visit(VarDecl n) {
 		n.t.accept(this);
 		n.i.accept(this);
+		
+		currMethod.addVar(n.i, n.t);
+		
 	}
 
 	// Type t;
@@ -115,16 +149,31 @@ public class BuildSymbolTableVisitor implements Visitor {
 	public void visit(MethodDecl n) {
 		n.t.accept(this);
 		n.i.accept(this);
+		
+		currClass.addVar(n.i, n.t);
+		
 		for (int i = 0; i < n.fl.size(); i++) {
 			n.fl.elementAt(i).accept(this);
+			
+			visit(n.fl.elementAt(i));
+			
 		}
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
+			
+			currMethod.addVar(n.vl.elementAt(i).i, n.vl.elementAt(i).t);
+			
 		}
 		for (int i = 0; i < n.sl.size(); i++) {
 			n.sl.elementAt(i).accept(this);
+			
+			visit(n.sl.elementAt(i));
+			
 		}
 		n.e.accept(this);
+		
+		visit(n.e);
+		
 	}
 
 	// Type t;
@@ -132,6 +181,9 @@ public class BuildSymbolTableVisitor implements Visitor {
 	public void visit(Formal n) {
 		n.t.accept(this);
 		n.i.accept(this);
+		
+		currMethod.addVar(n,i, n.t);
+		
 	}
 
 	public void visit(IntArrayType n) {
