@@ -1,5 +1,6 @@
 package minijavacomp.visitor;
 
+import minijavacomp.symboltable.Class;
 import minijavacomp.symboltable.Method;
 import minijavacomp.symboltable.SymbolTable;
 import minijavacomp.visitor.TypeVisitor;
@@ -58,6 +59,8 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public TypeCheckVisitor(SymbolTable st) {
 		symbolTable = st;
 	}
+	
+	private Class currClass;
 
 	// MainClass m;
 	// ClassDeclList cl;
@@ -83,6 +86,9 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// MethodDeclList ml;
 	public Type visit(ClassDeclSimple n) {
 		n.i.accept(this);
+		
+		currClass = new Class(n.i.toString(), null);
+		
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 		}
@@ -99,6 +105,9 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(ClassDeclExtends n) {
 		n.i.accept(this);
 		n.j.accept(this);
+		
+		currClass = new Class(n.i.toString(), n.j.toString());
+		
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 		}
@@ -314,6 +323,12 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// ExpList el;
 	public Type visit(Call n) {
 		
+		/***********************************
+		 *                                 *
+		 *ESTE MÉTODO NÃO ESTÁ FUNCIONANDO!*
+		 *                                 *
+		 ***********************************/
+		
 		Type e1 = n.e.accept(this);
 		
 		if (!(e1 instanceof IdentifierType)) WrongTypeException.InfoWrongTypeException(new IdentifierType(""), e1);
@@ -322,11 +337,9 @@ public class TypeCheckVisitor implements TypeVisitor {
 		if (i1 instanceof IdentifierType)  WrongTypeException.InfoWrongTypeException(new IdentifierType(""), i1);
 		
 		
-		Method method = symbolTable.getMethod(n.i, );
+		//Method method = symbolTable.getMethod(n.i.toString(), );
 		
-		Type methodType = symbolTable.getMethodType(n.i, );
-		
-		
+		Type methodType = symbolTable.getMethodType(n.i.toString(), n.el.toString());
 		
 		
 		for (int i = 0; i < n.el.size(); i++) {
@@ -354,7 +367,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 	}
 
 	public Type visit(This n) {
-		return ;
+		return currClass.type();
 	}
 
 	// Exp e;
