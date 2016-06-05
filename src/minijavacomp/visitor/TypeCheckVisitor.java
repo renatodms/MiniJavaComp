@@ -1,6 +1,8 @@
 package minijavacomp.visitor;
 
+import minijavacomp.symboltable.Method;
 import minijavacomp.symboltable.SymbolTable;
+import minijavacomp.visitor.TypeVisitor;
 import minijavacomp.visitor.exception.WrongTypeException;
 import minijavacomp.ast.And;
 import minijavacomp.ast.ArrayAssign;
@@ -172,16 +174,29 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Exp e;
 	// Statement s1,s2;
 	public Type visit(If n) {
-		n.e.accept(this);
+		Type e = n.e.accept(this);
+		
+		if(!(e instanceof BooleanType)){
+			WrongTypeException.InfoWrongTypeException(new BooleanType(), e);
+		}
+		
+		
 		n.s1.accept(this);
-		n.s2.accept(this);
+		n.s2.accept(this); 
+		
 		return null;
 	}
 
 	// Exp e;
 	// Statement s;
 	public Type visit(While n) {
-		n.e.accept(this);
+		
+		Type e = n.e.accept(this);
+		
+		if(!(e instanceof BooleanType)){
+			WrongTypeException.InfoWrongTypeException(new BooleanType(), e);
+		}
+		
 		n.s.accept(this);
 		return null;
 	}
@@ -195,53 +210,87 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Identifier i;
 	// Exp e;
 	public Type visit(Assign n) {
-		n.i.accept(this);
-		n.e.accept(this);
-		return null;
+		Type first = n.i.accept(this);
+		Type second = n.e.accept(this);
+		
+		if(!(second.getClass() == first.getClass())){
+			WrongTypeException.InfoWrongTypeException(first, second);
+		}
+		
+		return first;
 	}
 
 	// Identifier i;
 	// Exp e1,e2;
 	public Type visit(ArrayAssign n) {
-		n.i.accept(this);
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type idType = n.i.accept(this);
+		
+		Type e1 = n.e1.accept(this);
+		
+		Type e2 = n.e2.accept(this);
+		
+		if(!(idType instanceof IntArrayType)) WrongTypeException.InfoWrongTypeException(new IntArrayType(), e1);
+		
+		if(!(e1 instanceof IntegerType))  WrongTypeException.InfoWrongTypeException(new IntegerType(), e1);
+			
+		if(!(e2 instanceof IntegerType))  WrongTypeException.InfoWrongTypeException(new IntegerType(), e2);
+		
+		return new IntegerType();
 	}
 
 	// Exp e1,e2;
 	public Type visit(And n) {
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) WrongTypeException.InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) WrongTypeException.InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	// Exp e1,e2;
 	public Type visit(LessThan n) {
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new BooleanType();
 	}
 
 	// Exp e1,e2;
 	public Type visit(Plus n) {
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
 	// Exp e1,e2;
 	public Type visit(Minus n) {
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) WrongTypeException.InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
-	// Exp e1,e2;
+	// mult
 	public Type visit(Times n) {
-		n.e1.accept(this);
-		n.e2.accept(this);
-		return null;
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
 	// Exp e1,e2;
@@ -253,64 +302,87 @@ public class TypeCheckVisitor implements TypeVisitor {
 
 	// Exp e;
 	public Type visit(ArrayLength n) {
-		n.e.accept(this);
-		return null;
+		Type e1 = n.e.accept(this);
+		
+		if(e1 instanceof IntArrayType) new WrongTypeException().InfoWrongTypeException(new IntArrayType(), e1);
+		
+		return new IntegerType();
 	}
 
 	// Exp e;
 	// Identifier i;
 	// ExpList el;
 	public Type visit(Call n) {
-		n.e.accept(this);
-		n.i.accept(this);
+		
+		Type e1 = n.e.accept(this);
+		
+		if (!(e1 instanceof IdentifierType)) WrongTypeException.InfoWrongTypeException(new IdentifierType(""), e1);
+		
+		Type i1 = n.i.accept(this);
+		if (i1 instanceof IdentifierType)  WrongTypeException.InfoWrongTypeException(new IdentifierType(""), i1);
+		
+		
+		Method method = symbolTable.getMethod(n.i, );
+		
+		Type methodType = symbolTable.getMethodType(n.i, );
+		
+		
+		
+		
 		for (int i = 0; i < n.el.size(); i++) {
 			n.el.elementAt(i).accept(this);
 		}
-		return null;
+		return methodType;
 	}
 
 	// int i;
 	public Type visit(IntegerLiteral n) {
-		return null;
+		return new IntegerType();
 	}
 
 	public Type visit(True n) {
-		return null;
+		return new BooleanType();
 	}
 
 	public Type visit(False n) {
-		return null;
+		return new BooleanType();
 	}
 
 	// String s;
 	public Type visit(IdentifierExp n) {
-		return null;
+		return new IdentifierType(n.s);
 	}
 
 	public Type visit(This n) {
-		return null;
+		return ;
 	}
 
 	// Exp e;
 	public Type visit(NewArray n) {
-		n.e.accept(this);
-		return null;
+		Type e1 = n.e.accept(this);
+		
+		if(e1 instanceof IntegerType)  new WrongTypeException().InfoWrongTypeException(new IntegerType(), e1);
+		
+		return new IntArrayType();
 	}
 
 	// Identifier i;
 	public Type visit(NewObject n) {
-		return null;
+		return new IdentifierType(n.i.s);
 	}
 
 	// Exp e;
 	public Type visit(Not n) {
-		n.e.accept(this);
-		return null;
+		Type e1 = n.e.accept(this);
+		
+		if (!(e1 instanceof BooleanType))  new WrongTypeException().InfoWrongTypeException(new BooleanType(), e1);
+		
+		return new BooleanType();
 	}
 
 	// String s;
 	public Type visit(Identifier n) {
-		return null;
+		return new IdentifierType(n.s);
 	}
 
 	@Override
