@@ -61,14 +61,14 @@ public class BuildSymbolTableVisitor implements Visitor {
 		
 		symbolTable.addClass(n.m.getId(), n.m.parent());
 		currClass = new Class(n.m.getId(), n.m.parent());
-		visit(n.m);
+		//visit(n.m);
 		
 		for (int i = 0; i < n.cl.size(); i++) {
 			n.cl.elementAt(i).accept(this);
 			
 			symbolTable.addClass(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
 			currClass = new Class(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
-			visit(n.cl.elementAt(i));
+			//visit(n.cl.elementAt(i));
 		
 		}
 	}
@@ -101,7 +101,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 			
 			currClass.addMethod(n.ml.elementAt(i).i);
 			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
-			visit(n.ml.elementAt(i));
+			//visit(n.ml.elementAt(i));
 			
 		}
 	}
@@ -125,7 +125,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 			
 			currClass.addMethod(n.ml.elementAt(i).i);
 			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
-			visit(n.ml.elementAt(i));
+			//visit(n.ml.elementAt(i));
 			
 		}
 	}
@@ -150,12 +150,12 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.t.accept(this);
 		n.i.accept(this);
 		
-		currClass.addVar(n.i, n.t);
+		currMethod.addVar(n.i, n.t);
 		
 		for (int i = 0; i < n.fl.size(); i++) {
 			n.fl.elementAt(i).accept(this);
 			
-			visit(n.fl.elementAt(i));
+			//visit(n.fl.elementAt(i));
 			
 		}
 		for (int i = 0; i < n.vl.size(); i++) {
@@ -167,12 +167,12 @@ public class BuildSymbolTableVisitor implements Visitor {
 		for (int i = 0; i < n.sl.size(); i++) {
 			n.sl.elementAt(i).accept(this);
 			
-			visit(n.sl.elementAt(i));
+			//visit(n.sl.elementAt(i));
 			
 		}
 		n.e.accept(this);
 		
-		visit(n.e);
+		//visit(n.e);
 		
 	}
 
