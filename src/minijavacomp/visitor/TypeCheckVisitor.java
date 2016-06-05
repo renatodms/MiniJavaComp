@@ -1,6 +1,7 @@
 package minijavacomp.visitor;
 
 import minijavacomp.symboltable.SymbolTable;
+import minijavacomp.visitor.exception.WrongTypeException;
 import minijavacomp.ast.And;
 import minijavacomp.ast.ArrayAssign;
 import minijavacomp.ast.ArrayLength;
@@ -52,7 +53,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 
 	private SymbolTable symbolTable;
 
-	TypeCheckVisitor(SymbolTable st) {
+	public TypeCheckVisitor(SymbolTable st) {
 		symbolTable = st;
 	}
 
@@ -315,66 +316,134 @@ public class TypeCheckVisitor implements TypeVisitor {
 	@Override
 	public Type visit(Or n) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = n.e1.accept(this);
+		Type type2 = n.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(Diff ns) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = ns.e1.accept(this);
+		Type type2 = ns.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(LessEq lessEq) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = lessEq.e1.accept(this);
+		Type type2 = lessEq.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(GreaterThan greaterThan) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = greaterThan.e1.accept(this);
+		Type type2 = greaterThan.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(GreaterEq greaterEq) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = greaterEq.e1.accept(this);
+		Type type2 = greaterEq.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(Eq eq) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = eq.e1.accept(this);
+		Type type2 = eq.e2.accept(this);
+		
+		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
+		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(Mult mult) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = mult.e1.accept(this);
+		Type type2 = mult.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
 	@Override
 	public Type visit(Div div) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = div.e1.accept(this);
+		Type type2 = div.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
 	@Override
 	public Type visit(Mod mod) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type1 = mod.e1.accept(this);
+		Type type2 = mod.e2.accept(this);
+		
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
+		
+		return new IntegerType();
 	}
 
 	@Override
 	public Type visit(Opposite opposite) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Type type = opposite.e1.accept(this);
+		
+		if(!(type instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type);
+		
+		return new BooleanType();
 	}
 
 	@Override
 	public Type visit(BooleanLiteral booleanLiteral) {
 		// TODO Auto-generated method stub
-		return null;
+		return new BooleanType();
 	}
 }
