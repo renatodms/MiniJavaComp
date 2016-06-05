@@ -10,7 +10,7 @@ public class MainClass {
     i1=ai1; i2=ai2; s=as;
   }
 
-  public void accept(Visitor v) {
+public void accept(Visitor v) {
     v.visit(this);
   }
 

@@ -21,6 +21,7 @@ public interface TypeVisitor {
   public Type visit(Assign n);
   public Type visit(ArrayAssign n);
   public Type visit(And n);
+  public Type visit(Or n);
   public Type visit(LessThan n);
   public Type visit(Plus n);
   public Type visit(Minus n);
@@ -37,4 +38,14 @@ public interface TypeVisitor {
   public Type visit(NewObject n);
   public Type visit(Not n);
   public Type visit(Identifier n);
+public Type visit(Diff ns);
+public Type visit(LessEq lessEq);
+public Type visit(GreaterThan greaterThan);
+public Type visit(GreaterEq greaterEq);
+public Type visit(Eq eq);
+public Type visit(Mult mult);
+public Type visit(Div div);
+public Type visit(Mod mod);
+public Type visit(Opposite opposite);
+public Type visit(BooleanLiteral booleanLiteral);
 }

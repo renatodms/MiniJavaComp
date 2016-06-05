@@ -1,8 +1,13 @@
 %%
 
+%class Lexer
+%cup
+%implements sym
 %public
-%standalone
-%class rdms
+%unicode
+%line
+%column
+
 
 %%
 
