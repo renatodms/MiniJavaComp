@@ -1,6 +1,7 @@
-package visitor;
+package minijavacomp.visitor;
 
-import ast.*;
+import minijavacomp.ast.*;
+import minijavacomp.parser.ast.BooleanLiteral;
 
 public interface TypeVisitor {
   public Type visit(Program n);

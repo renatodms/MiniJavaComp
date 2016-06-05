@@ -1,9 +1,9 @@
-package ast;
+package minijavacomp.parser.ast;
 
-import ast.Exp;
-import ast.Type;
-import visitor.TypeVisitor;
-import visitor.Visitor;
+import minijavacomp.ast.Exp;
+import minijavacomp.ast.Type;
+import minijavacomp.visitor.TypeVisitor;
+import minijavacomp.visitor.Visitor;
 
 public class BooleanLiteral extends Exp {
 

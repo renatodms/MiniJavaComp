@@ -1,7 +1,7 @@
-package ast;
+package minijavacomp.ast;
 
-import visitor.TypeVisitor;
-import visitor.Visitor;
+import minijavacomp.visitor.TypeVisitor;
+import minijavacomp.visitor.Visitor;
 
 public class Mult extends Exp {
 

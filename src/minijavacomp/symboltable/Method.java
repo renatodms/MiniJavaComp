@@ -1,10 +1,10 @@
-package symboltable;
+package minijavacomp.symboltable;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import ast.Type;
+import minijavacomp.ast.Type;
 
 public class Method {
 

@@ -1,0 +1,194 @@
+import java.io.IOException;
+import java.nio.file.Paths;
+import lexer.Lexer;
+import ast.*;
+import java_cup.runtime.ComplexSymbolFactory;
+
+parser code {:
+	private Lexer lexer;
+
+	private Path file;
+
+	ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+
+    public Parser(Path file) throws IOException {
+
+        this.file = file;
+
+        super.symbolFactory = new ComplexSymbolFactory();
+
+        this.lexer = new Lexer(file, symbolFactory);
+    }
+
+:}
+
+init with {:
+:};
+
+scan with {:
+    return lexer.next_token();
+:};
+
+
+
+terminal CLASS, PUBLIC, EXTENDS, STATIC, VOID, INT, BOOLEAN, WHILE, IF, ELSE, RETURN, THIS, NEW,
+         SEMICOLON, DOT, COMMA, ASSIGN, O_PAR, C_PAR, O_BRAC, C_BRAC, O_BRACK, C_BRACK,
+         OR, AND, EQUALS, DIFF, LESS, LESS_EQ, GREATER, GREATER_EQ, PLUS, MINUS, TIMES, SLASH, PERCENT, OPP;
+terminal Boolean FALSE, TRUE;
+terminal Integer INTEGER;
+terminal Double FLOAT;
+terminal String ID;
+
+terminal MAIN, PRINTLN, LENGTH;
+
+terminal STRGARG;
+
+
+
+non terminal Program prog;
+
+non terminal MainClass mClass;
+non terminal ClassDeclList classList;
+non terminal ClassDecl clas;
+non terminal Identifier ext;
+non terminal VarDeclList varList;
+non terminal VarDecl var;
+non terminal MethodDeclList methodList;
+non terminal MethodDecl method;
+non terminal VarDeclList argumentList;
+non terminal VarDeclList arguments;
+non terminal VarDecl argument;
+
+// Tipos de dados e identificador
+non terminal Type type;
+non terminal Identifier id;
+
+non terminal StatementList statementList;
+non terminal FormalList formalList;
+non terminal Statement statement;
+non terminal Exp expression;
+
+non terminal ExpList paramList;
+non terminal ExpList params;
+
+precedence right ASSIGN;
+
+precedence left AND, OR;
+
+precedence right OPP;
+
+precedence nonassoc EQUALS, DIFF, LESS, LESS_EQ, GREATER, GREATER_EQ;
+
+precedence left PLUS, MINUS;
+precedence left TIMES, SLASH, PERCENT;
+
+precedence right NEW;
+
+precedence nonassoc ID;
+
+precedence left DOT;
+
+
+prog        ::= mClass:main classList:cList                             {:RESULT = new Program(main, cList);:}
+            ;
+
+mClass      ::= CLASS id:name O_BRAC PUBLIC STATIC VOID MAIN O_PAR STRGARG id:args C_PAR O_BRAC statement:main C_BRAC C_BRAC
+                                                                        {:RESULT = new MainClass(name, args, main);:}
+            ;
+
+classList   ::= classList:cList clas:cl                                 {:cList.addElement(cl); RESULT = cList;:}
+                |                                                       {:RESULT = new ClassDeclList();:}
+            ;
+
+clas        ::= CLASS id:name ext:extclass O_BRAC varList:vars methodList:methods C_BRAC
+                                                                        {:if (extclass == null) RESULT = new ClassDeclSimple(name, vars, methods);
+                                                                        else RESULT = new ClassDeclExtends(name, extclass, vars, methods);:}
+            ;
+
+ext         ::= EXTENDS id:cl                                           {:RESULT = cl;:}
+                |                                                       {:RESULT = null;:}
+            ;
+
+varList     ::= varList:vList var:var                                   {:vList.addElement(var); RESULT = vList;:}
+                |                                                       {:RESULT = new VarDeclList();;:}
+            ;
+
+var         ::= type:type id:name SEMICOLON                             {:RESULT = new VarDecl(type, name);:}
+            ;
+
+methodList  ::= methodList:mList method:method                          {:mList.addElement(method); RESULT = mList;:}
+                |                                                       {:RESULT = new MethodDeclList();:}
+            ;
+
+method      ::= PUBLIC type:rType id:name O_PAR formalList:args C_PAR O_BRAC varList:vars statementList:code RETURN expression:ret SEMICOLON C_BRAC
+                                                                        {:RESULT = new MethodDecl(rType, name, args, vars, code, ret);:}
+            ;
+
+argumentList::= arguments:aList                                         {:RESULT = aList;:}
+                |                                                       {:RESULT = new VarDeclList();:}
+            ;
+
+arguments   ::= arguments:aList COMMA argument:arg                      {:aList.addElement(arg); RESULT = aList;:}
+                | argument:arg                                          {:RESULT = new VarDeclList(); RESULT.addElement(arg);:}
+            ;
+
+argument    ::= type:type id:name                                       {:RESULT = new VarDecl(type, name);:}
+            ;
+
+type        ::= INT                                                     {:RESULT = new IntegerType();:}
+                | INT O_BRACK C_BRACK                                   {:RESULT = new IntArrayType();:}
+                | BOOLEAN                                               {:RESULT = new BooleanType();:}
+                | ID:id                                                 {:RESULT = new IdentifierType(id);:}
+            ;
+
+id          ::= ID:stringid                                             {:RESULT = new Identifier(stringid);:}
+            ;
+
+statementList    ::= statement:statement statementList:sList                                {:sList.addElement(statement); RESULT = sList;:}
+                |                                                       {:RESULT = new StatementList();:}
+            ;
+
+statement        ::= O_BRAC statementList:sList C_BRAC                            {:RESULT = new Block(sList);:}
+                | IF O_PAR expression:expression C_PAR statement:i ELSE statement:e           {:RESULT = new If(expression, i, e);:}
+                | WHILE O_PAR expression:expression C_PAR statement:s                    {:RESULT = new While(expression, s);:}
+                | PRINTLN O_PAR expression:expression C_PAR SEMICOLON               {:RESULT = new Print(expression);:}
+                | id:var ASSIGN expression:expression SEMICOLON                     {:RESULT = new Assign(var, expression);:}
+                | id:array O_BRACK expression:index C_BRACK ASSIGN expression:expression SEMICOLON   {:RESULT = new ArrayAssign(array, index, expression);:}
+            ;
+
+expression        ::= expression:l OR expression:r                                        {:RESULT = new Or(l, r);:}
+                | expression:l AND expression:r                                     {:RESULT = new And(l, r);:}
+                | expression:l EQUALS expression:r                                  {:RESULT = new Eq(l, r);:}
+                | expression:l DIFF expression:r                                    {:RESULT = new Diff(l, r);:}
+                | expression:l LESS expression:r                                    {:RESULT = new LessThan(l, r);:}
+                | expression:l LESS_EQ expression:r                                 {:RESULT = new LessEq(l, r);:}
+                | expression:l GREATER expression:r                                 {:RESULT = new GreaterThan(l, r);:}
+                | expression:l GREATER_EQ expression:r                              {:RESULT = new GreaterEq(l, r);:}
+                | expression:l PLUS expression:r                                    {:RESULT = new Plus(l, r);:}
+                | expression:l MINUS expression:r                                   {:RESULT = new Minus(l, r);:}
+                | expression:l TIMES expression:r                                   {:RESULT = new Mult(l, r);:}
+                | expression:l SLASH expression:r                                   {:RESULT = new Div(l, r);:}
+                | expression:l PERCENT expression:r                                 {:RESULT = new Mod(l, r);:}
+                | OPP expression:e                                            {:RESULT = new Opposite(e);:}
+                | expression:array O_BRACK expression:index C_BRACK                 {:RESULT = new ArrayLookup(array, index);:}
+                | expression:array DOT LENGTH                                 {:RESULT = new ArrayLength(array);:}
+                | expression:obj DOT id:method O_PAR paramList:pList C_PAR    {:RESULT = new Call(obj, method, pList);:}
+                | INTEGER:v                                             {:RESULT = new IntegerLiteral(v);:}
+                | FALSE:v                                               {:RESULT = new BooleanLiteral(v);:}
+                | TRUE:v                                                {:RESULT = new BooleanLiteral(v);:}
+                | ID:v                                                  {:RESULT = new IdentifierExp(v);:}
+                | THIS                                                  {:RESULT = new This();:}
+                | NEW INT O_BRACK expression:len C_BRACK                      {:RESULT = new NewArray(len);:}
+                | NEW id:type O_PAR C_PAR                               {:RESULT = new NewObject(type);:}
+                | O_PAR expression:expression C_PAR                                 {:RESULT = expression;:}
+                | expression:e INTEGER:i                                      {:if(i < 0) RESULT = new Minus(e, new IntegerLiteral(-i));
+                                                                                  else throw new UnsupportedOperationException();:}
+            ;
+
+paramList   ::= params:params                                           {:RESULT = params;:}
+                |                                                       {:RESULT = new ExpList();:}
+            ;
+
+params      ::= params:pList COMMA expression:param                           {:pList.addElement(param); RESULT = pList;:}
+                | expression:param                                            {:RESULT = new ExpList(); RESULT.addElement(param);:}
+            ;

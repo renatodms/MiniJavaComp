@@ -1,12 +1,12 @@
-package symboltable;
+package minijavacomp.symboltable;
 
 import java.util.Hashtable;
 
-import ast.BooleanType;
-import ast.IdentifierType;
-import ast.IntArrayType;
-import ast.IntegerType;
-import ast.Type;
+import minijavacomp.ast.BooleanType;
+import minijavacomp.ast.IdentifierType;
+import minijavacomp.ast.IntArrayType;
+import minijavacomp.ast.IntegerType;
+import minijavacomp.ast.Type;
 
 public class SymbolTable {
 

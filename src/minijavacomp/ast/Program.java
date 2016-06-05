@@ -1,6 +1,6 @@
-package ast;
-import visitor.Visitor;
-import visitor.TypeVisitor;
+package minijavacomp.ast;
+import minijavacomp.visitor.Visitor;
+import minijavacomp.visitor.TypeVisitor;
 
 public class Program {
   public MainClass m;

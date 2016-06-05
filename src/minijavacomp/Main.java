@@ -1,7 +1,9 @@
+package minijavacomp;
+
 import java.nio.file.Paths;
 
-import ast.Program;
-import parser.Parser;
+import minijavacomp.ast.Program;
+import minijavacomp.parser.parser.Parser;
 
 public class Main {
 	public static void main (String[] args) throws Exception{

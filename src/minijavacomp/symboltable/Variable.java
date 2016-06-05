@@ -1,6 +1,6 @@
-package symboltable;
+package minijavacomp.symboltable;
 
-import ast.Type;
+import minijavacomp.ast.Type;
 
 public class Variable {
 

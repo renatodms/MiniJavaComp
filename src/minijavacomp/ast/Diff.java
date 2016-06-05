@@ -1,7 +1,7 @@
-package ast;
+package minijavacomp.ast;
 
-import visitor.TypeVisitor;
-import visitor.Visitor;
+import minijavacomp.visitor.TypeVisitor;
+import minijavacomp.visitor.Visitor;
 
 public class Diff extends Exp {
 	  public Exp e1,e2;

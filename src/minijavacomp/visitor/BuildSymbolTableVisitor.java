@@ -1,43 +1,54 @@
-package visitor;
+package minijavacomp.visitor;
 
-import symboltable.SymbolTable;
-import symboltable.Class;
-import symboltable.Method;
-import symboltable.Variable;
-import ast.And;
-import ast.ArrayAssign;
-import ast.ArrayLength;
-import ast.ArrayLookup;
-import ast.Assign;
-import ast.Block;
-import ast.BooleanType;
-import ast.Call;
-import ast.ClassDeclExtends;
-import ast.ClassDeclSimple;
-import ast.False;
-import ast.Formal;
-import ast.Identifier;
-import ast.IdentifierExp;
-import ast.IdentifierType;
-import ast.If;
-import ast.IntArrayType;
-import ast.IntegerLiteral;
-import ast.IntegerType;
-import ast.LessThan;
-import ast.MainClass;
-import ast.MethodDecl;
-import ast.Minus;
-import ast.NewArray;
-import ast.NewObject;
-import ast.Not;
-import ast.Plus;
-import ast.Print;
-import ast.Program;
-import ast.This;
-import ast.Times;
-import ast.True;
-import ast.VarDecl;
-import ast.While;
+import minijavacomp.symboltable.SymbolTable;
+import minijavacomp.symboltable.Class;
+import minijavacomp.symboltable.Method;
+import minijavacomp.symboltable.Variable;
+import minijavacomp.ast.And;
+import minijavacomp.ast.ArrayAssign;
+import minijavacomp.ast.ArrayLength;
+import minijavacomp.ast.ArrayLookup;
+import minijavacomp.ast.Assign;
+import minijavacomp.ast.Block;
+import minijavacomp.ast.BooleanType;
+import minijavacomp.ast.Call;
+import minijavacomp.ast.ClassDeclExtends;
+import minijavacomp.ast.ClassDeclSimple;
+import minijavacomp.ast.Diff;
+import minijavacomp.ast.Div;
+import minijavacomp.ast.Eq;
+import minijavacomp.ast.False;
+import minijavacomp.ast.Formal;
+import minijavacomp.ast.GreaterEq;
+import minijavacomp.ast.GreaterThan;
+import minijavacomp.ast.Identifier;
+import minijavacomp.ast.IdentifierExp;
+import minijavacomp.ast.IdentifierType;
+import minijavacomp.ast.If;
+import minijavacomp.ast.IntArrayType;
+import minijavacomp.ast.IntegerLiteral;
+import minijavacomp.ast.IntegerType;
+import minijavacomp.ast.LessEq;
+import minijavacomp.ast.LessThan;
+import minijavacomp.ast.MainClass;
+import minijavacomp.ast.MethodDecl;
+import minijavacomp.ast.Minus;
+import minijavacomp.ast.Mod;
+import minijavacomp.ast.Mult;
+import minijavacomp.ast.NewArray;
+import minijavacomp.ast.NewObject;
+import minijavacomp.ast.Not;
+import minijavacomp.ast.Opposite;
+import minijavacomp.ast.Or;
+import minijavacomp.ast.Plus;
+import minijavacomp.ast.Print;
+import minijavacomp.ast.Program;
+import minijavacomp.ast.This;
+import minijavacomp.ast.Times;
+import minijavacomp.ast.True;
+import minijavacomp.ast.VarDecl;
+import minijavacomp.ast.While;
+import minijavacomp.parser.ast.BooleanLiteral;
 
 public class BuildSymbolTableVisitor implements Visitor {
 
@@ -59,17 +70,12 @@ public class BuildSymbolTableVisitor implements Visitor {
 	public void visit(Program n) {
 		n.m.accept(this);
 		
-		symbolTable.addClass(n.m.getId(), n.m.parent());
-		currClass = new Class(n.m.getId(), n.m.parent());
+		symbolTable.addClass(n.m.i1.toString(), null);
+		currClass = new Class(n.m.i1.toString(), null);
 		//visit(n.m);
 		
 		for (int i = 0; i < n.cl.size(); i++) {
 			n.cl.elementAt(i).accept(this);
-			
-			symbolTable.addClass(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
-			currClass = new Class(n.cl.elementAt(i).getId(), n.cl.elementAt(i).parent());
-			//visit(n.cl.elementAt(i));
-		
 		}
 	}
 
@@ -80,8 +86,8 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.i2.accept(this);
 		n.s.accept(this);
 		
-		symbolTable.addClass(n.i1, null);
-		currClass = new Class(n.i1, null);
+		symbolTable.addClass(n.i1.toString(), null);
+		currClass = new Class(n.i1.toString(), null);
 		
 	}
 
@@ -93,14 +99,14 @@ public class BuildSymbolTableVisitor implements Visitor {
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 			
-			currClass.addVar(n.i, n.vl.elementAt(i).t);
+			currClass.addVar(n.i.toString(), n.vl.elementAt(i).t);
 			
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
 			n.ml.elementAt(i).accept(this);
 			
-			currClass.addMethod(n.ml.elementAt(i).i);
-			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
+			currClass.addMethod(n.ml.elementAt(i).i.toString(), n.ml.elementAt(i).t);
+			currMethod = new Method(n.ml.elementAt(i).i.toString(), n.ml.elementAt(i).t);
 			//visit(n.ml.elementAt(i));
 			
 		}
@@ -116,15 +122,15 @@ public class BuildSymbolTableVisitor implements Visitor {
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 			
-			currClass.addVar(n.i, n.vl.elementAt(i));
-			currClass.addVar(n.j, n.vl.elementAt(i));
+			currClass.addVar(n.i.toString(), n.vl.elementAt(i).t);
+			currClass.addVar(n.j.toString(), n.vl.elementAt(i).t);
 			
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
 			n.ml.elementAt(i).accept(this);
 			
-			currClass.addMethod(n.ml.elementAt(i).i);
-			currMethod = new Method(n.ml.elementAt(i).i, n.ml.elementAt(i).t);
+			currClass.addMethod(n.ml.elementAt(i).i.toString(), n.ml.elementAt(i).t);
+			currMethod = new Method(n.ml.elementAt(i).i.toString(), n.ml.elementAt(i).t);
 			//visit(n.ml.elementAt(i));
 			
 		}
@@ -136,7 +142,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.t.accept(this);
 		n.i.accept(this);
 		
-		currMethod.addVar(n.i, n.t);
+		currMethod.addVar(n.i.toString(), n.t);
 		
 	}
 
@@ -150,7 +156,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.t.accept(this);
 		n.i.accept(this);
 		
-		currMethod.addVar(n.i, n.t);
+		currMethod.addVar(n.i.toString(), n.t);
 		
 		for (int i = 0; i < n.fl.size(); i++) {
 			n.fl.elementAt(i).accept(this);
@@ -161,7 +167,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 			
-			currMethod.addVar(n.vl.elementAt(i).i, n.vl.elementAt(i).t);
+			currMethod.addVar(n.vl.elementAt(i).i.toString(), n.vl.elementAt(i).t);
 			
 		}
 		for (int i = 0; i < n.sl.size(); i++) {
@@ -182,7 +188,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 		n.t.accept(this);
 		n.i.accept(this);
 		
-		currMethod.addVar(n,i, n.t);
+		currMethod.addVar(n.i.toString(), n.t);
 		
 	}
 
@@ -326,5 +332,71 @@ public class BuildSymbolTableVisitor implements Visitor {
 
 	// String s;
 	public void visit(Identifier n) {
+	}
+
+	@Override
+	public void visit(Or n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Diff n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LessEq lessEq) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(GreaterThan greaterThan) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(GreaterEq greaterEq) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Eq eq) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Mult mult) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Div div) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Mod mod) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Opposite opposite) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BooleanLiteral booleanLiteral) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,4 +1,4 @@
-package ast;
+package minijavacomp.ast;
 
 import java.util.LinkedList;
 import java.util.List;

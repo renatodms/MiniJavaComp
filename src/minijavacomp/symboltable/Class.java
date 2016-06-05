@@ -1,10 +1,10 @@
-package symboltable;
+package minijavacomp.symboltable;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import ast.IdentifierType;
-import ast.Type;
+import minijavacomp.ast.IdentifierType;
+import minijavacomp.ast.Type;
 
 public class Class {
 
