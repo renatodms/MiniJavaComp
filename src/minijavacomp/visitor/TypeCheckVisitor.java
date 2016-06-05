@@ -333,8 +333,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type type1 = ns.e1.accept(this);
 		Type type2 = ns.e2.accept(this);
 		
-		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
-		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		if (!((type1 instanceof BooleanType && type2 instanceof BooleanType) || (type1 instanceof IntegerType && type2 instanceof IntegerType))) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
 		
 		return new BooleanType();
 	}
@@ -346,8 +345,8 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type type1 = lessEq.e1.accept(this);
 		Type type2 = lessEq.e2.accept(this);
 		
-		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
-		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
 		
 		return new BooleanType();
 	}
@@ -359,8 +358,8 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type type1 = greaterThan.e1.accept(this);
 		Type type2 = greaterThan.e2.accept(this);
 		
-		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
-		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
 		
 		return new BooleanType();
 	}
@@ -372,8 +371,8 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type type1 = greaterEq.e1.accept(this);
 		Type type2 = greaterEq.e2.accept(this);
 		
-		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
-		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		if (!(type1 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
+		if (!(type2 instanceof IntegerType)) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type2);
 		
 		return new BooleanType();
 	}
@@ -385,8 +384,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type type1 = eq.e1.accept(this);
 		Type type2 = eq.e2.accept(this);
 		
-		if (!(type1 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type1);
-		if (!(type2 instanceof BooleanType)) new WrongTypeException().InfoWrongTypeException(new BooleanType(), type2);
+		if (!((type1 instanceof BooleanType && type2 instanceof BooleanType) || (type1 instanceof IntegerType && type2 instanceof IntegerType))) new WrongTypeException().InfoWrongTypeException(new IntegerType(), type1);
 		
 		return new BooleanType();
 	}
